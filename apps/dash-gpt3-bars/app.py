@@ -61,10 +61,11 @@ output_code = [
 
 #Added Survey Section 
 #Aims to collect data/metrics from the user
+#Todo improve survey
 survey = [
     dbc.CardHeader("Let us know how we did"),
     html.Div([
-    dbc.Label("Please check the boxes which are true"),
+        dbc.Label("Please check the boxes which are true"),
         dbc.Checklist(
             options=[
                 {"label": "The graph provided was accurate", "value": 1},
@@ -72,8 +73,9 @@ survey = [
                 {"label": "The product was helpful", "value": 3},
             ],
             id="switches-input",
-        )
-        ]),
+            )
+        ]
+    ),
 ]
 
 explanation = f"""
@@ -107,14 +109,6 @@ app.layout = dbc.Container(
             )
         ),
         dbc.Card(explanation_card),
-        # dbc.Label("Is the information provided accurate?"),
-        # dbc.RadioItems(
-        #     options=[
-        #         {"label": "Yes", "value": 1},
-        #         {"label": "No", "value": 2},
-        #     ],
-        #     id="radioitems-input",
-        # ),
     ],
     fluid=False,
 )
