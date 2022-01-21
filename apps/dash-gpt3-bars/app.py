@@ -59,6 +59,23 @@ output_code = [
     dcc.Markdown(id="output-code", style={"margin": "50px 5px"}),
 ]
 
+#Added Survey Section 
+#Aims to collect data/metrics from the user
+survey = [
+    dbc.CardHeader("Let us know how we did"),
+    html.Div([
+    dbc.Label("Please check the boxes which are true"),
+        dbc.Checklist(
+            options=[
+                {"label": "The graph provided was accurate", "value": 1},
+                {"label": "The code provided was accurate", "value": 2},
+                {"label": "The product was helpful", "value": 3},
+            ],
+            id="switches-input",
+        )
+        ]),
+]
+
 explanation = f"""
 *GPT-3 can generate Plotly graphs from a simple description of what you want!
 We only needed to give the following prompt to GPT-3:*
@@ -84,20 +101,20 @@ app.layout = dbc.Container(
             dbc.Row(
                 [
                     dbc.Col(dbc.Card(comp, style=content_style))
-                    for comp in [output_graph, output_code]
+                    for comp in [output_graph, output_code, survey]
                 ],
                 style={"padding-bottom": "15px"},
             )
         ),
         dbc.Card(explanation_card),
-        dbc.Label("Is the information provided accurate?"),
-        dbc.RadioItems(
-            options=[
-                {"label": "Yes", "value": 1},
-                {"label": "No", "value": 2},
-            ],
-            id="radioitems-input",
-        ),
+        # dbc.Label("Is the information provided accurate?"),
+        # dbc.RadioItems(
+        #     options=[
+        #         {"label": "Yes", "value": 1},
+        #         {"label": "No", "value": 2},
+        #     ],
+        #     id="radioitems-input",
+        # ),
     ],
     fluid=False,
 )
