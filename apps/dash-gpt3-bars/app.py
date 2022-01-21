@@ -41,7 +41,7 @@ controls = [
         [
             dbc.Input(
                 id="input-text",
-                placeholder="Specify what you want GPT-3 to generate...",
+                placeholder="Specify what you want GPT-3 to generate... test2",
             ),
             dbc.InputGroupAddon(
                 dbc.Button("Submit", id="button-submit", color="primary"),
