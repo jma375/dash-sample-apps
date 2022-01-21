@@ -41,7 +41,7 @@ controls = [
         [
             dbc.Input(
                 id="input-text",
-                placeholder="Specify what you want GPT-3 to generate... test2",
+                placeholder="Specify what you want GPT-3 to generate...",
             ),
             dbc.InputGroupAddon(
                 dbc.Button("Submit", id="button-submit", color="primary"),
@@ -90,6 +90,14 @@ app.layout = dbc.Container(
             )
         ),
         dbc.Card(explanation_card),
+        dbc.Label("Is the information provided accurate?"),
+        dbc.RadioItems(
+            options=[
+                {"label": "Yes", "value": 1},
+                {"label": "No", "value": 2},
+            ],
+            id="radioitems-input",
+        ),
     ],
     fluid=False,
 )
