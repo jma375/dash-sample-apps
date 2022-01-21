@@ -11,6 +11,7 @@ from dash.dash import no_update
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import openai
+import csv
 
 
 def Header(name, app):
@@ -71,8 +72,11 @@ survey = [
                 {"label": "The graph provided was accurate", "value": 1},
                 {"label": "The code provided was accurate", "value": 2},
                 {"label": "The product was helpful", "value": 3},
+                {"label": "There is no to little delay when using the product", "value": 4},
+                {"label": "You would recommend this product to a friend", "value": 5},
             ],
             id="switches-input",
+            value = [],
             )
         ]
     ),
@@ -94,6 +98,8 @@ explanation_card = [
     dbc.CardBody(dcc.Markdown(explanation)),
 ]
 
+
+
 app.layout = dbc.Container(
     [
         Header("Dash GPT-3 Chart Generation", app),
@@ -103,7 +109,7 @@ app.layout = dbc.Container(
             dbc.Row(
                 [
                     dbc.Col(dbc.Card(comp, style=content_style))
-                    for comp in [output_graph, output_code, survey]
+                    for comp in [output_graph, output_code,survey]
                 ],
                 style={"padding-bottom": "15px"},
             )
@@ -112,6 +118,25 @@ app.layout = dbc.Container(
     ],
     fluid=False,
 )
+
+
+inputs = html.Div(
+    [
+        dbc.Form([survey]),
+        html.P(id="checklist-output"),
+    ]
+)
+
+@app.callback(
+    Output("checklist-output", "children"),
+    [Input("checklist-input", "value")],
+)
+
+def asCSV():
+    with open('/Users/jamesalfano/Downloads/test.csv', 'wb') as f:
+        writer = csv.writer(f)
+        writer.writerows(checklist_value)
+
 
 
 @app.callback(
