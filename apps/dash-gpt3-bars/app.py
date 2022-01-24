@@ -2,6 +2,7 @@
 import black
 import os
 from textwrap import dedent
+import pandas as pd
 
 import dash
 import dash_bootstrap_components as dbc
@@ -12,7 +13,7 @@ from dash.dependencies import Input, Output, State
 import plotly.express as px
 import openai
 import csv
-
+import datetime
 
 def Header(name, app):
     title = html.H1(name, style={"margin-top": 5})
@@ -60,9 +61,8 @@ output_code = [
     dcc.Markdown(id="output-code", style={"margin": "50px 5px"}),
 ]
 
-#Added Survey Section 
+#Survey Section 
 #Aims to collect data/metrics from the user
-#Todo improve survey
 survey = [
     dbc.CardHeader("Let us know how we did"),
     html.Div([
@@ -72,10 +72,10 @@ survey = [
                 {"label": "The graph provided was accurate", "value": 1},
                 {"label": "The code provided was accurate", "value": 2},
                 {"label": "The product was helpful", "value": 3},
-                {"label": "There is no to little delay when using the product", "value": 4},
+                {"label": "There is little to no delay when using the product", "value": 4},
                 {"label": "You would recommend this product to a friend", "value": 5},
             ],
-            id="switches-input",
+            id="survey-input",
             value = [],
             )
         ]
@@ -109,33 +109,50 @@ app.layout = dbc.Container(
             dbc.Row(
                 [
                     dbc.Col(dbc.Card(comp, style=content_style))
-                    for comp in [output_graph, output_code,survey]
+                    for comp in [output_graph, output_code]
                 ],
                 style={"padding-bottom": "15px"},
             )
         ),
         dbc.Card(explanation_card),
+        #Added Survey Card here
+        dbc.Card([dbc.Form(survey),
+        html.P(id="survey-output")]),
     ],
     fluid=False,
 )
 
 
-inputs = html.Div(
-    [
-        dbc.Form([survey]),
-        html.P(id="checklist-output"),
-    ]
-)
-
+#Survey call back
 @app.callback(
-    Output("checklist-output", "children"),
-    [Input("checklist-input", "value")],
+    Output("survey-output", "children"),
+    [Input("survey-input", "value")],
 )
+#Function to collect and store metrics
+#Saves metrics as CSV to local 
+def report_metrics(survey_value):
+    d = {"Graph_Acc?": 1,
+    "Code_Acc?": 2,
+    "Helpfulness?": 3,
+    "No Lag?": 4,
+    "Recommendation?": 5}
+    x = []
+    for k, v in d.items():
+        if v in survey_value:
+            x.append(1)
+        else:
+            x.append(0)
 
-def asCSV():
-    with open('/Users/jamesalfano/Downloads/test.csv', 'wb') as f:
-        writer = csv.writer(f)
-        writer.writerows(checklist_value)
+    #Create df
+    df = pd.DataFrame(columns = d.items())
+
+    #Set row name to time and date of survey
+    time = datetime.datetime.now()
+    df.loc[time] = x
+
+    #Save to csv 
+    df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv')
+
 
 
 
