@@ -1,4 +1,3 @@
-#This is a test push
 import black
 import os
 from textwrap import dedent
@@ -146,7 +145,7 @@ def report_metrics(survey_value):
     #Create df
     df = pd.DataFrame(columns = d.items())
 
-    #Set row name to time and date of survey
+    #Set row name to time and date of survey completion
     time = datetime.datetime.now()
     df.loc[time] = x
 
