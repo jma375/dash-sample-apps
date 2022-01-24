@@ -2,6 +2,8 @@ import black
 import os
 from textwrap import dedent
 import pandas as pd
+import os.path
+from pathlib import Path
 
 import dash
 import dash_bootstrap_components as dbc
@@ -126,6 +128,7 @@ app.layout = dbc.Container(
 )
 
 
+
 #Survey call back
 @app.callback(
     Output("survey-output", "children"),
@@ -158,10 +161,13 @@ def report_metrics(survey_value,n_clicks):
         df.loc[time] = x
 
         #Save to csv 
-        df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv')
-
-        #survey_output.setAttreibute("Checked","False")
-        #return {'display':'none'}
+        my_file = Path('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv')
+        #If file exists -> dont use header
+        if my_file.is_file():
+            df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv',mode = 'a',header = None)
+        #If file does not exist ->  Create header
+        else:
+             df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv',mode = 'a')
 
 
 
