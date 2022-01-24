@@ -76,6 +76,7 @@ survey = [
             ],
             id="survey-input",
             value = [],
+            labelStyle = {'display':'block'}
             )
         ]
     ),
@@ -116,7 +117,10 @@ app.layout = dbc.Container(
         dbc.Card(explanation_card),
         #Added Survey Card here
         dbc.Card([dbc.Form(survey),
-        html.P(id="survey-output")]),
+        #Submit button added for survey
+        html.Button('Submit Survey', id='submit-val', n_clicks=0),
+        html.P(id="survey-output")]#,style = {'display':'block'}
+        ),
     ],
     fluid=False,
 )
@@ -125,33 +129,39 @@ app.layout = dbc.Container(
 #Survey call back
 @app.callback(
     Output("survey-output", "children"),
-    [Input("survey-input", "value")],
+    [Input("survey-input", "value"),
+    Input('submit-val', 'n_clicks'),
+    ]
 )
 #Function to collect and store metrics
 #Saves metrics as CSV to local 
-def report_metrics(survey_value):
-    d = {"Graph_Acc?": 1,
-    "Code_Acc?": 2,
-    "Helpfulness?": 3,
-    "No Lag?": 4,
-    "Recommendation?": 5}
-    x = []
-    for k, v in d.items():
-        if v in survey_value:
-            x.append(1)
-        else:
-            x.append(0)
+def report_metrics(survey_value,n_clicks):
+    #If submit button is clicked -> then send results to csv
+    if n_clicks > 0:
+        d = {"Graph_Acc?": 1,
+        "Code_Acc?": 2,
+        "Helpfulness?": 3,
+        "No Lag?": 4,
+        "Recommendation?": 5}
+        x = []
+        for k, v in d.items():
+            if v in survey_value:
+                x.append(1)
+            else:
+                x.append(0)
 
-    #Create df
-    df = pd.DataFrame(columns = d.items())
+        #Create df
+        df = pd.DataFrame(columns = d.keys())
 
-    #Set row name to time and date of survey completion
-    time = datetime.datetime.now()
-    df.loc[time] = x
+        #Set row name to time and date of survey completion
+        time = datetime.datetime.now()
+        df.loc[time] = x
 
-    #Save to csv 
-    df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv')
+        #Save to csv 
+        df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv')
 
+        #survey_output.setAttreibute("Checked","False")
+        #return {'display':'none'}
 
 
 
