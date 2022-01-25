@@ -65,20 +65,19 @@ output_code = [
 #Survey Section 
 #Aims to collect data/metrics from the user
 survey = [
-    dbc.CardHeader("Let us know how we did"),
+    dbc.CardHeader("When you are done, please let us know how we did."),
     html.Div([
-        dbc.Label("Please check the boxes which are true"),
+        dbc.Label("Check the boxes that you agree with."),
         dbc.Checklist(
             options=[
-                {"label": "The graph provided was accurate", "value": 1},
+                {"label": "The graphs provided were accurate", "value": 1},
                 {"label": "The code provided was accurate", "value": 2},
                 {"label": "The product was helpful", "value": 3},
-                {"label": "There is little to no delay when using the product", "value": 4},
-                {"label": "You would recommend this product to a friend", "value": 5},
+                {"label": "The product was fast", "value": 4},
+                {"label": "You would recommend this product", "value": 5},
             ],
             id="survey-input",
-            value = [],
-            labelStyle = {'display':'block'}
+            value = 'show',
             )
         ]
     ),
@@ -121,7 +120,7 @@ app.layout = dbc.Container(
         dbc.Card([dbc.Form(survey),
         #Submit button added for survey
         html.Button('Submit Survey', id='submit-val', n_clicks=0),
-        html.P(id="survey-output")]#,style = {'display':'block'}
+        html.P(id="survey-output")],style = {'display':'block'},id = 'card_id'
         ),
     ],
     fluid=False,
@@ -144,7 +143,7 @@ def report_metrics(survey_value,n_clicks):
         d = {"Graph_Acc?": 1,
         "Code_Acc?": 2,
         "Helpfulness?": 3,
-        "No Lag?": 4,
+        "fast?": 4,
         "Recommendation?": 5}
         x = []
         for k, v in d.items():
@@ -162,6 +161,7 @@ def report_metrics(survey_value,n_clicks):
 
         #Save to csv 
         my_file = Path('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv')
+
         #If file exists -> dont use header
         if my_file.is_file():
             df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv',mode = 'a',header = None)
@@ -169,6 +169,13 @@ def report_metrics(survey_value,n_clicks):
         else:
              df.to_csv('/Users/jamesalfano/Documents/gpt3bar_Metrics.csv',mode = 'a')
 
+
+
+#Callback to remove survey when finished
+@app.callback(Output('card_id', 'style'),[Input('survey-output', 'value'),Input('submit-val', 'n_clicks')])
+def toggle_survey(toggle_value,n_clicks):
+    if n_clicks > 0:
+        return {'display': 'none'}
 
 
 @app.callback(
