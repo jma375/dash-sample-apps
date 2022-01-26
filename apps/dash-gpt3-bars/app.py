@@ -72,9 +72,9 @@ survey = [
             options=[
                 {"label": "The graphs provided were accurate", "value": 1},
                 {"label": "The code provided was accurate", "value": 2},
-                {"label": "The product was helpful", "value": 3},
-                {"label": "The product was fast", "value": 4},
-                {"label": "You would recommend this product", "value": 5},
+                {"label": "The app was helpful", "value": 3},
+                {"label": "The app was fast", "value": 4},
+                {"label": "You would recommend this app", "value": 5},
             ],
             id="survey-input",
             value = 'show',
@@ -140,10 +140,10 @@ app.layout = dbc.Container(
 def report_metrics(survey_value,n_clicks):
     #If submit button is clicked -> then send results to csv
     if n_clicks > 0:
-        d = {"Graph_Acc?": 1,
-        "Code_Acc?": 2,
+        d = {"Graph Acc?": 1,
+        "Code Acc?": 2,
         "Helpfulness?": 3,
-        "fast?": 4,
+        "Fast?": 4,
         "Recommendation?": 5}
         x = []
         for k, v in d.items():
